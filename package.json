@@ -1,0 +1,22 @@
+{
+  "name": "intro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watchAll --bail",
+    "test:coverage": "jest --collect-coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^24.9.0"
+  },
+  "dependencies": {
+    "meteor-random": "^0.0.3",
+    "mongoose": "^5.8.3",
+    "winston": "^3.2.1"
+  }
+}
