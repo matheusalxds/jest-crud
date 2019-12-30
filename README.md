@@ -11,5 +11,19 @@ The project basically consists of:
     - Creating a connection with database before all tests.
     - Closing the connection after all tests.
     - Cleaning up the created data after each test.
+    
+To run the tests:
+```
+yarn test
+   or
+yarn run test:watch (auto-reload)
+```
+To check code coverage:
+```
+yarn run test:coverage
+```
+Then you can check the statistics at
+`./coverage/lcov-report/controller.js.html`.
+(PS: You can open in your preferred browser)
 
 The structure was thinking based on a Real Project System.
