@@ -12,6 +12,8 @@ describe('User service', () => {
   describe('User controller', () => {
     let userController;
     let mockUserData;
+    const _id = 'matheusalxds';
+    const tmpData = { name: 'Matheus EDITADO WO' };
 
     // Starting server before all the tests
     beforeAll(async () => {
@@ -45,7 +47,7 @@ describe('User service', () => {
       expect(newUser.toJSON()).toEqual(mockUserData());
     });
 
-    it('should throw an error because doesn\'t exists data', async () => {
+    it(`should throw an error because doesn't exists 'data'`, async () => {
       try {
         await userController.createUser(null);
       } catch (e) {
@@ -71,16 +73,40 @@ describe('User service', () => {
       expect(users.length).toBe(usersByModel.length);
     });
 
-    it('should return an user with _id = matheusalxds', async () => {
-      const _id = 'matheusalxds';
+    it(`should return an user with _id = 'matheusalxds'`, async () => {
       const users = await userController.getUsers({ _id });
       expect(users.length).not.toBeNull();
     });
 
-    it('should return an user with name = matheus', async () => {
+    it(`should return an user with name = 'Matheus'`, async () => {
       const name = 'Matheus';
       const users = await userController.getUsers({ name });
       expect(users.length).not.toBeNull();
+    });
+
+    it(`should update an user based on 'userId'`, async () => {
+      const user = await userController.updateUser({ userId: _id, data: tmpData });
+      expect(user.name).toBe(tmpData.name);
+    });
+
+    it(`should throw error if there isn't any 'userId'`, async () => {
+      await expect(userController.updateUser({ data: tmpData })).rejects.toBeTruthy();
+    });
+
+    it(`should throw an error if there isn't any 'data'`, async () => {
+      await expect(userController.updateUser({ userId: _id })).rejects.toBeTruthy();
+    });
+
+    it(`should throw an error if there isn't any 'user'`, async () => {
+      await expect(userController.updateUser({ userId: 'matheus', data: tmpData })).rejects.toBeTruthy();
+    });
+
+    it(`should delete an user based on 'userId'`, async () => {
+      await expect(userController.deleteUser({ userId: 'matheusalxds' })).resolves.toBeTruthy();
+    });
+
+    it(`should throw an error if 'userId' was not provided`, async () => {
+      await expect(userController.deleteUser({ userId: null })).rejects.toBeTruthy();
     });
   });
 });

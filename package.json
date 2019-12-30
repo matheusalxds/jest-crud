@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "test:watch": "jest --watchAll --bail",
+    "test:watch": "jest --watchAll --bail --verbose",
     "test:coverage": "jest --collect-coverage"
   },
   "keywords": [],

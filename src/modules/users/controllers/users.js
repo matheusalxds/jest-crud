@@ -1,5 +1,3 @@
-const logger = require('../../../utils/logger');
-
 class Controller {
   constructor(User) {
     this.User = User;
@@ -26,9 +24,35 @@ class Controller {
       if (name) query.name = name;
 
       const users = await this.User.find(query);
-      logger.info(`FOUND ${users.length} users`);
-
       return resolve(users);
+    });
+  }
+
+  async updateUser({ userId, data }) {
+    return new Promise(async (resolve, reject) => {
+      if (!userId || !data) {
+        return reject(new Error);
+      }
+
+      const user = await this.User.findById(userId);
+      if (!user) {
+        return reject(new Error);
+      }
+
+      Object.assign(user, data);
+      await user.save();
+
+      return resolve(user);
+    });
+  }
+
+  async deleteUser({ userId }) {
+    return new Promise(async (resolve, reject) => {
+      if (!userId) {
+        return reject(new Error);
+      }
+      const response = await this.User.deleteMany();
+      return resolve(response);
     });
   }
 }
