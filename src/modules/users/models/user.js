@@ -6,11 +6,7 @@ const schema = new mongoose.Schema({
   name: { type: String, required: true },
   lastName: String,
   fullName: String,
-  email: {
-    type: String,
-    require: true,
-    unique: true,
-  },
+  email: String,
 }, { collection: 'users' });
 
 module.exports = mongoose.model('User', schema);

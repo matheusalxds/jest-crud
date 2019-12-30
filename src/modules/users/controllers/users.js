@@ -10,10 +10,8 @@ class Controller {
       try {
         const newUser = new this.User(data);
         await newUser.save();
-
         return resolve(newUser);
       } catch (e) {
-        console.log('e ==>', e);
         return reject(e);
       }
     });
