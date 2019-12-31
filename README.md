@@ -1,5 +1,14 @@
 # POC - Using [Jest](https://jestjs.io/) + [Mongoose](https://mongoosejs.com/docs/guide.html)
+<p align="center">
+  <img alt = "Última confirmação do Github" src = "https://img.shields.io/github/last-commit/matheusalxds/jest-examples">
+  <img alt = "Idioma principal do GitHub" src = "https://img.shields.io/github/languages/top/matheusalxds/jest-examples">
+  <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/matheusalxds/jest-examples?color=%2304D361">
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-%2304D361">
 
+  <a href="https://github.com/matheusalxds/jest-examples/stargazers">
+    <img alt="Stargazers" src="https://img.shields.io/github/stars/matheusalxds/jest-examples?style=social">
+  </a>
+</p>
 #### Project developed to improve knowledge about tests
 
 The project basically consists of:
