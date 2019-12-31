@@ -40,6 +40,10 @@ describe('User service', () => {
       await Database(config).disconnect();
     });
 
+    it('should have a create user function', async () => {
+      expect(typeof userController.createUser).toBe('function');
+    });
+
     it('should create an user', async () => {
       const newUser = await userController.createUser(mockUserData());
       // to remove version key
@@ -53,6 +57,10 @@ describe('User service', () => {
       } catch (e) {
         expect(e).toBeTruthy();
       }
+    });
+
+    it('should have a getUsers function', async () => {
+      expect(typeof userController.getUsers).toBe('function');
     });
 
     it('should return all users', async () => {
@@ -84,6 +92,10 @@ describe('User service', () => {
       expect(users.length).not.toBeNull();
     });
 
+    it('should have an updateUser function', async () => {
+      expect(typeof userController.updateUser).toBe('function');
+    });
+
     it(`should update an user based on 'userId'`, async () => {
       const user = await userController.updateUser({ userId: _id, data: tmpData });
       expect(user.name).toBe(tmpData.name);
@@ -99,6 +111,10 @@ describe('User service', () => {
 
     it(`should throw an error if there isn't any 'user'`, async () => {
       await expect(userController.updateUser({ userId: 'matheus', data: tmpData })).rejects.toBeTruthy();
+    });
+
+    it('should have a deleteUser function', async () => {
+      expect(typeof userController.deleteUser).toBe('function');
     });
 
     it(`should delete an user based on 'userId'`, async () => {
