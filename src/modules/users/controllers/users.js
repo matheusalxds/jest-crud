@@ -5,6 +5,9 @@ class Controller {
 
   async createUser(data) {
     return new Promise(async (resolve, reject) => {
+      // if (!data) {
+      //   return reject(new Error);
+      // }
       try {
         const newUser = new this.User(data);
         await newUser.save();

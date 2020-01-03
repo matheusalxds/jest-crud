@@ -11,7 +11,6 @@ const __mock = require('../models/__mock__/user');
 describe('User service', () => {
   describe('User controller', () => {
     let userController;
-    let mockUserData;
     const _id = 'matheusalxds';
     const tmpData = { name: 'Matheus EDITADO WO' };
 
@@ -30,11 +29,6 @@ describe('User service', () => {
       userController = controller(User);
     });
 
-    // Populate the obj
-    beforeEach(() => {
-      mockUserData = jest.fn().mockReturnValue(__mock);
-    });
-
     // Close server after finish the tests
     afterAll(async () => {
       await Database(config).disconnect();
@@ -45,18 +39,14 @@ describe('User service', () => {
     });
 
     it('should create an user', async () => {
-      const newUser = await userController.createUser(mockUserData());
+      const newUser = await userController.createUser(__mock);
       // to remove version key
       newUser.__v = undefined;
-      expect(newUser.toJSON()).toEqual(mockUserData());
+      expect(newUser.toJSON()).toEqual(__mock);
     });
 
-    it(`should throw an error because doesn't exists 'data'`, async () => {
-      try {
-        await userController.createUser(null);
-      } catch (e) {
-        expect(e).toBeTruthy();
-      }
+    it(`should throw an error because doesn't exist 'data'`, async () => {
+      await expect(userController.createUser(null)).rejects.toBeTruthy();
     });
 
     it('should have a getUsers function', async () => {
@@ -67,7 +57,7 @@ describe('User service', () => {
       // add new user
       for (let i = 0; i < 10; i++) {
         await userController.createUser({
-          ...mockUserData(),
+          ...__mock,
           _id: undefined,
           name: faker.name.firstName(),
           lastName: faker.name.lastName(),
