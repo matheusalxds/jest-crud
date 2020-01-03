@@ -53,7 +53,13 @@ describe('User service', () => {
       expect(typeof userController.getUsers).toBe('function');
     });
 
-    it('should return all users', async () => {
+    it('should return all users with no arguments', async () => {
+      const spy = jest.spyOn(userController, 'getUsers');
+      await userController.getUsers();
+      expect(spy).toHaveBeenCalledWith();
+    });
+
+    it('should return all users passing an empty object', async () => {
       const spy = jest.spyOn(userController, 'getUsers');
       await userController.getUsers({});
       expect(spy).toHaveBeenCalledWith({});
