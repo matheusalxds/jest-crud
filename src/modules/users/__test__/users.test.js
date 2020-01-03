@@ -54,32 +54,23 @@ describe('User service', () => {
     });
 
     it('should return all users', async () => {
-      // add new user
-      for (let i = 0; i < 10; i++) {
-        await userController.createUser({
-          ...__mock,
-          _id: undefined,
-          name: faker.name.firstName(),
-          lastName: faker.name.lastName(),
-          fullName: faker.name.findName(),
-          email: faker.internet.email(),
-        });
-      }
-
-      const users = await userController.getUsers();
-      const usersByModel = await User.find({});
-      expect(users.length).toBe(usersByModel.length);
+      const spy = jest.spyOn(userController, 'getUsers');
+      await userController.getUsers({});
+      expect(spy).toHaveBeenCalledWith({});
     });
 
-    it(`should return an user with _id = 'matheusalxds'`, async () => {
-      const users = await userController.getUsers({ _id });
-      expect(users.length).not.toBeNull();
+    it(`should return an user with some _id`, async () => {
+      const spy = jest.spyOn(userController, 'getUsers');
+      const _id = 'someId';
+      await userController.getUsers({ _id });
+      expect(spy).toHaveBeenCalledWith({ _id });
     });
 
     it(`should return an user with name = 'Matheus'`, async () => {
+      const spy = jest.spyOn(userController, 'getUsers');
       const name = 'Matheus';
-      const users = await userController.getUsers({ name });
-      expect(users.length).not.toBeNull();
+      await userController.getUsers({ name });
+      expect(spy).toHaveBeenCalledWith({ name });
     });
 
     it('should have an updateUser function', async () => {
