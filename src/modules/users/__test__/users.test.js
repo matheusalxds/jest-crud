@@ -1,18 +1,16 @@
-const faker = require('faker');
-
 const Database = require('../../../database/database');
 const config = require('../../../database/db-config');
 
 const User = require('../models/user');
 const controller = require('../controllers/users');
 
-const __mock = require('../models/__mock__/user');
+const userData = require('../models/__mock__/user');
+const usersData = require('../models/__mock__/users');
 
 describe('User service', () => {
   describe('User controller', () => {
     let userController;
-    const _id = 'matheusalxds';
-    const tmpData = { name: 'Matheus EDITADO WO' };
+    let firstUser;
 
     // Starting server before all the tests
     beforeAll(async () => {
@@ -22,6 +20,10 @@ describe('User service', () => {
     // Cleaning up users from database
     beforeAll(async () => {
       await Database(config).schemaDeleteMany(User);
+    });
+
+    beforeAll(async () => {
+      await User.insertMany(usersData);
     });
 
     // Initialize user controller
@@ -39,13 +41,15 @@ describe('User service', () => {
     });
 
     it('should create an user', async () => {
-      const newUser = await userController.createUser(__mock);
-      // to remove version key
-      newUser.__v = undefined;
-      expect(newUser.toJSON()).toEqual(__mock);
+      firstUser = await userController.createUser(userData);
+      const findUser = await User.findOne({ _id: firstUser._id });
+      expect(firstUser.name).toBe(findUser.name);
+      expect(firstUser.lastName).toBe(findUser.lastName);
+      expect(firstUser.fullName).toBe(findUser.fullName);
+      expect(firstUser.email).toBe(findUser.email);
     });
 
-    it(`should throw an error because doesn't exist 'data'`, async () => {
+    it(`should throw an error if doesn't exist 'data'`, async () => {
       await expect(userController.createUser(null)).rejects.toBeTruthy();
     });
 
@@ -54,29 +58,18 @@ describe('User service', () => {
     });
 
     it('should return all users with no arguments', async () => {
-      const spy = jest.spyOn(userController, 'getUsers');
-      await userController.getUsers();
-      expect(spy).toHaveBeenCalledWith();
+      const users = await userController.getUsers();
+      expect(users.length).toBe(4);
     });
 
-    it('should return all users passing an empty object', async () => {
-      const spy = jest.spyOn(userController, 'getUsers');
-      await userController.getUsers({});
-      expect(spy).toHaveBeenCalledWith({});
+    it(`should return an user based on firstUser _id`, async () => {
+      const found = await userController.getUsers({ _id: firstUser._id });
+      expect(found).toBeTruthy();
     });
 
-    it(`should return an user with some _id`, async () => {
-      const spy = jest.spyOn(userController, 'getUsers');
-      const _id = 'someId';
-      await userController.getUsers({ _id });
-      expect(spy).toHaveBeenCalledWith({ _id });
-    });
-
-    it(`should return an user with name = 'Matheus'`, async () => {
-      const spy = jest.spyOn(userController, 'getUsers');
-      const name = 'Matheus';
-      await userController.getUsers({ name });
-      expect(spy).toHaveBeenCalledWith({ name });
+    it(`should return an user based on firstUser name`, async () => {
+      const found = await userController.getUsers({ name: firstUser.name });
+      expect(found).toBeTruthy();
     });
 
     it('should have an updateUser function', async () => {
@@ -84,20 +77,23 @@ describe('User service', () => {
     });
 
     it(`should update an user based on 'userId'`, async () => {
-      const user = await userController.updateUser({ userId: _id, data: tmpData });
-      expect(user.name).toBe(tmpData.name);
+      const user = await userController.updateUser({ userId: firstUser._id, data: userData });
+      expect(user.name).toBe(userData.name);
+      expect(user.lastName).toBe(userData.lastName);
+      expect(user.fullName).toBe(userData.fullName);
+      expect(user.email).toBe(userData.email);
     });
 
     it(`should throw error if there isn't any 'userId'`, async () => {
-      await expect(userController.updateUser({ data: tmpData })).rejects.toBeTruthy();
+      await expect(userController.updateUser({ data: userData })).rejects.toBeTruthy();
     });
 
     it(`should throw an error if there isn't any 'data'`, async () => {
-      await expect(userController.updateUser({ userId: _id })).rejects.toBeTruthy();
+      await expect(userController.updateUser({ userId: firstUser._id })).rejects.toBeTruthy();
     });
 
     it(`should throw an error if there isn't any 'user'`, async () => {
-      await expect(userController.updateUser({ userId: 'matheus', data: tmpData })).rejects.toBeTruthy();
+      await expect(userController.updateUser({ userId: 'matheus', data: userData })).rejects.toBeTruthy();
     });
 
     it('should have a deleteUser function', async () => {
@@ -105,7 +101,7 @@ describe('User service', () => {
     });
 
     it(`should delete an user based on 'userId'`, async () => {
-      await expect(userController.deleteUser({ userId: 'matheusalxds' })).resolves.toBeTruthy();
+      await expect(userController.deleteUser({ userId: firstUser._id })).resolves.toBeTruthy();
     });
 
     it(`should throw an error if 'userId' was not provided`, async () => {
